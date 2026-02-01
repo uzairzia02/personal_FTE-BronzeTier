@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git fetch --all --prune)",
+      "Bash(.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly)",
+      "Bash(.specify/scripts/powershell/setup-plan.ps1 -Json)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)",
+      "Bash(echo \"# AI Employee Dashboard\n\n## Recent Activity\n\n- [2026-01-30 10:30:00] System Initialized: AI Employee system started\n\n## System Status\n- **Last Check**: 2026-01-30 10:30:00\n- **Status**: Running\n- **Files Processed**: 0\n- **Active Tasks**: 0\n- **Pending Approval**: 0\n\n## Directory Statistics\n- **Inbox**: 0 items\n- **Needs Action**: 0 items\n- **Done**: 0 items\n- **Plans**: 0 items\n- **Pending Approval**: 0 items\n- **Logs**: 0 items\n\n## Next Actions\n1. Monitor incoming files in the watch directory\n2. Process any items in Needs_Action\n3. Update dashboard with activity\")",
+      "Bash(echo \"# Company Handbook\n\n## Rules of Engagement for AI Employee\n\n### Primary Directives\n1. **Human Safety First**: Never take any action that could harm humans or put them at risk\n2. **Data Privacy**: Protect all personal and sensitive information\n3. **Transparency**: Maintain clear logs of all actions taken\n4. **Human Oversight**: Escalate sensitive matters to human approval\n\n### Operational Guidelines\n- Monitor the Inbox and Needs_Action folders regularly\n- Process routine tasks automatically\n- Flag sensitive content for human approval\n- Create detailed plans for complex tasks\n- Update the dashboard with system status\n\n### Sensitive Content Categories\n- Personal Identifiable Information \\(PII\\)\n- Financial information\n- Passwords and credentials\n- Legal documents\n- Medical records\n- Employment records\n- Confidential business information\n\n### Escalation Procedures\n- When sensitive content is detected, move to Pending_Approval\n- Notify human supervisor if available\n- Document all escalations in logs\n\n### Weekly Objectives\n- Process all routine tasks efficiently\n- Maintain system uptime\n- Keep dashboard updated\n- Follow constitutional requirements\")",
+      "Bash(echo \"# Business Goals\n\n## Weekly Objectives for AI Employee\n\n### Primary Goals\n1. **Efficiency**: Process routine tasks with minimal human intervention\n2. **Safety**: Identify and escalate sensitive content appropriately\n3. **Reliability**: Operate continuously with minimal downtime\n4. **Transparency**: Maintain comprehensive logs and dashboard updates\n\n### This Week''s Priorities\n- Process all incoming files from the monitored directory\n- Maintain 99% uptime for the reasoning engine\n- Keep dashboard updated with recent activity\n- Ensure all sensitive content is properly escalated\n\n### Success Metrics\n- Number of tasks processed: ____\n- Number of escalations: ____\n- System uptime: ____%\n- Average response time: ____ seconds\n\n### Constraints\n- Operate entirely locally with no cloud dependencies\n- Maintain privacy of all processed information\n- Follow constitutional requirements at all times\n- Keep resource usage minimal\")",
+      "Bash(pip install pyyaml)",
+      "Bash(python -m pip install pyyaml)",
+      "Bash(python -c \"import yaml; print\\(''PyYAML successfully imported''\\)\")",
+      "Bash(python -c \"\nimport AI_Employee_Logger\nimport AI_Employee_Watcher\nimport AI_Employee_Reasoning\nimport utils.yaml_parser\nimport utils.file_hasher\nimport utils.constants\nprint\\(''All modules imported successfully!''\\)\n\")",
+      "Bash(python demo_test.py)",
+      "Bash(python AI_Employee.py --vault-path ./AI_Employee_Vault --watch-dir ./test_watch_dir --single-cycle)",
+      "Bash(timeout 10s python AI_Employee.py --vault-path ./AI_Employee_Vault --watch-dir ./test_watch_dir)",
+      "Bash(dir \"AI_Employee_Vault\\\\Pending_Approval\")",
+      "Bash(python AI_Employee.py --vault-path ./AI_Employee_Vault --single-cycle)",
+      "Bash(powershell Get-ChildItem -Path AI_Employee_Vault -Recurse)",
+      "Bash(powershell Get-ChildItem -Path AI_Employee_Vault -Filter \"Dashboard.md\")",
+      "Bash(powershell Get-ChildItem -Path AI_Employee_VaultNeeds_Action -Filter \"*.md\" -ErrorAction SilentlyContinue)",
+      "Bash(dir AI_Employee_VaultLogs)",
+      "Bash(git remote add origin https://github.com/uzairzia02/personal_FTE-BronzeTier.git)",
+      "Bash(git add .)"
+    ]
+  }
+}
