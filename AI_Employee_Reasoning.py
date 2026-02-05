@@ -92,9 +92,21 @@ class ReasoningEngine:
         try:
             original_filename = os.path.basename(original_file_path)
 
-            # Create a new filename for the approval request
+            # Extract a short description from the content for the filename
+            # Take first 30 characters of content, strip whitespace and special chars
+            short_desc = content.strip()[:30].replace('\n', ' ').replace('\r', ' ')
+            # Remove special characters that might cause filesystem issues
+            import re
+            short_desc = re.sub(r'[^\w\s-]', '', short_desc)
+            short_desc = re.sub(r'\s+', '_', short_desc).strip('_')
+
+            # If short_desc is empty or just whitespace, use a generic term
+            if not short_desc:
+                short_desc = "task"
+
+            # Create a new filename for the approval request with descriptive info
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            approval_filename = f"approval_{timestamp}_{original_filename}"
+            approval_filename = f"approval_{short_desc}_{timestamp}_{original_filename}"
             approval_path = os.path.join(self.pending_approval_dir, approval_filename)
 
             # Update frontmatter to indicate this needs approval
@@ -127,9 +139,21 @@ class ReasoningEngine:
         try:
             original_filename = os.path.basename(original_file_path)
 
-            # Create a new filename for the plan
+            # Extract a short description from the content for the filename
+            # Take first 30 characters of content, strip whitespace and special chars
+            import re
+            short_desc = content.strip()[:30].replace('\n', ' ').replace('\r', ' ')
+            # Remove special characters that might cause filesystem issues
+            short_desc = re.sub(r'[^\w\s-]', '', short_desc)
+            short_desc = re.sub(r'\s+', '_', short_desc).strip('_')
+
+            # If short_desc is empty or just whitespace, use a generic term
+            if not short_desc:
+                short_desc = "task"
+
+            # Create a new filename for the plan with descriptive info
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            plan_filename = f"plan_{timestamp}_{original_filename.replace('.md', '_plan.md')}"
+            plan_filename = f"plan_{short_desc}_{timestamp}_{original_filename.replace('.md', '_plan.md')}"
             plan_path = os.path.join(self.plans_dir, plan_filename)
 
             # Update frontmatter for the plan
@@ -203,34 +227,108 @@ class ReasoningEngine:
             # Create dashboard if it doesn't exist
             if not os.path.exists(self.dashboard_path):
                 with open(self.dashboard_path, 'w', encoding='utf-8') as f:
-                    f.write("# AI Employee Dashboard\n\n")
-                    f.write("## Recent Activity\n\n")
+                    f.write("# 🤖 AI Employee Dashboard\n\n")
+                    f.write("## 📊 Status Overview\n")
+                    f.write("- 🟡 **Pending Approval:** Files requiring human review\n")
+                    f.write("- ✅ **Approved:** Files approved and moved to Done\n")
+                    f.write("- ❌ **Rejected:** Files rejected and remaining in Pending_Approval\n")
+                    f.write("- 📋 **Completed:** Files processed automatically\n\n")
+                    f.write("## 📈 Current Status Summary\n")
+                    f.write("- 🟡 **Pending Approval:** 0 files\n")
+                    f.write("- ✅ **Needs Action:** 0 files\n")
+                    f.write("- 📋 **Completed (Done):** 0 files\n")
+                    f.write("- 📝 **In Planning:** 0 files\n\n")
+                    f.write("## 🔄 Recent Activity\n\n")
 
             # Read current dashboard content
             with open(self.dashboard_path, 'r', encoding='utf-8') as f:
                 current_content = f.read()
 
+            # Determine emoji and category based on action
+            if "Approval Request" in action_taken:
+                emoji = "🟡"
+                category = "Pending Approval"
+            elif "Approved" in action_taken:
+                emoji = "✅"
+                category = "Approved"
+            elif "Rejected" in action_taken:
+                emoji = "❌"
+                category = "Rejected"
+            elif "Completed" in action_taken:
+                emoji = "📋"
+                category = "Completed"
+            else:
+                emoji = "🔹"
+                category = "Other"
+
             # Add new activity entry
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            new_entry = f"- [{timestamp}] {action_taken}: {filename}\n"
+            new_entry = f"- {emoji} [{timestamp}] {action_taken}: {filename}\n"
 
             # Insert new entry after the "Recent Activity" header
             lines = current_content.split('\n')
             for i, line in enumerate(lines):
-                if line.strip() == "## Recent Activity":
+                if line.strip() == "## 🔄 Recent Activity" or line.strip() == "## Recent Activity":
                     lines.insert(i + 1, new_entry)
                     break
             else:
                 # If header not found, add it
-                lines.extend(["", "## Recent Activity", new_entry])
+                lines.extend(["", "## 🔄 Recent Activity", new_entry])
 
             # Write updated content back to dashboard
             with open(self.dashboard_path, 'w', encoding='utf-8') as f:
                 f.write('\n'.join(lines))
 
+            # Now update the categorized summary
+            self.update_categorized_summary()
+
             self.logger.info("ReasoningEngine", f"Updated dashboard with: {action_taken} for {filename}")
         except Exception as e:
             self.logger.error("ReasoningEngine", f"Error updating dashboard: {str(e)}")
+
+    def update_categorized_summary(self):
+        """
+        Update the dashboard with categorized summary of files in each directory.
+        """
+        try:
+            with open(self.dashboard_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            # Count files in each directory
+            pending_approval_count = len(os.listdir(self.pending_approval_dir)) if os.path.exists(self.pending_approval_dir) else 0
+            done_count = len(os.listdir(self.done_dir)) if os.path.exists(self.done_dir) else 0
+            needs_action_count = len(os.listdir(self.needs_action_dir)) if os.path.exists(self.needs_action_dir) else 0
+            plans_count = len(os.listdir(self.plans_dir)) if os.path.exists(self.plans_dir) else 0
+
+            # Create the categorized summary
+            summary_section = f"## 📈 Current Status Summary\n"
+            summary_section += f"- 🟡 **Pending Approval:** {pending_approval_count} files\n"
+            summary_section += f"- ✅ **Needs Action:** {needs_action_count} files\n"
+            summary_section += f"- 📋 **Completed (Done):** {done_count} files\n"
+            summary_section += f"- 📝 **In Planning:** {plans_count} files\n\n"
+
+            # Replace the entire summary section using regex
+            import re
+            pattern = r'## 📈 Current Status Summary.*?(?=## |\n-\s*\w|\Z)'
+            updated_content = re.sub(pattern, summary_section.rstrip(), content, flags=re.DOTALL)
+
+            # Ensure the status overview section is clean
+            status_overview_section = "## 📊 Status Overview\n"
+            status_overview_section += "- 🟡 **Pending Approval:** Files requiring human review\n"
+            status_overview_section += "- ✅ **Approved:** Files approved and moved to Done\n"
+            status_overview_section += "- ❌ **Rejected:** Files rejected and remaining in Pending_Approval\n"
+            status_overview_section += "- 📋 **Completed:** Files processed automatically\n\n"
+
+            # Replace the status overview section
+            pattern_status = r'## 📊 Status Overview.*?(?=## 📈|## 🔄|\n\n|\Z)'
+            updated_content = re.sub(pattern_status, status_overview_section.rstrip(), updated_content, flags=re.DOTALL)
+
+            # Write updated content back to dashboard
+            with open(self.dashboard_path, 'w', encoding='utf-8') as f:
+                f.write(updated_content)
+
+        except Exception as e:
+            self.logger.error("ReasoningEngine", f"Error updating categorized summary: {str(e)}")
 
     def move_to_done(self, original_file_path: str):
         """
@@ -238,10 +336,27 @@ class ReasoningEngine:
         """
         try:
             original_filename = os.path.basename(original_file_path)
-            done_path = os.path.join(self.done_dir, original_filename)
+
+            # Extract a short description from the content for the filename (for consistency)
+            frontmatter, content = self.parse_markdown_file(original_file_path)
+            import re
+            short_desc = content.strip()[:30].replace('\n', ' ').replace('\r', ' ')
+            # Remove special characters that might cause filesystem issues
+            short_desc = re.sub(r'[^\w\s-]', '', short_desc)
+            short_desc = re.sub(r'\s+', '_', short_desc).strip('_')
+
+            # If short_desc is empty or just whitespace, use the original filename
+            if not short_desc:
+                final_filename = original_filename
+            else:
+                # Create a more descriptive filename
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                name_part, ext = os.path.splitext(original_filename)
+                final_filename = f"done_{short_desc}_{timestamp}_{name_part}{ext}"
+
+            done_path = os.path.join(self.done_dir, final_filename)
 
             # Update frontmatter to mark as done
-            frontmatter, content = self.parse_markdown_file(original_file_path)
             frontmatter['status'] = 'completed'
             frontmatter['completed_at'] = datetime.now().isoformat()
 
@@ -257,10 +372,10 @@ class ReasoningEngine:
                     with open(original_file_path, 'w', encoding='utf-8') as f:
                         f.write(updated_content)
 
-            # Move file to Done directory
+            # Move file to Done directory with new descriptive name
             shutil.move(original_file_path, done_path)
 
-            self.logger.info("ReasoningEngine", f"Moved file to Done: {original_filename}")
+            self.logger.info("ReasoningEngine", f"Moved file to Done: {final_filename}")
             return done_path
         except Exception as e:
             self.logger.error("ReasoningEngine", f"Error moving file to Done: {str(e)}")

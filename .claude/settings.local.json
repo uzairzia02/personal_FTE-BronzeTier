@@ -22,7 +22,19 @@
       "Bash(powershell Get-ChildItem -Path AI_Employee_VaultNeeds_Action -Filter \"*.md\" -ErrorAction SilentlyContinue)",
       "Bash(dir AI_Employee_VaultLogs)",
       "Bash(git remote add origin https://github.com/uzairzia02/personal_FTE-BronzeTier.git)",
-      "Bash(git add .)"
+      "Bash(git add .)",
+      "Bash(git commit -m \"Initial commit: FTE Bronze Tier project setup\")",
+      "Bash(git config --global user.email \"uzairzia02@gmail.com\")",
+      "Bash(git config --global user.name \"Uzair Zia\")",
+      "Bash(git push -u origin master)",
+      "Bash(python task_manager.py --list)",
+      "Bash(python task_manager.py --mark-done T022)",
+      "Bash(findstr T022)",
+      "Bash(python task_manager.py --approve T030)",
+      "Bash(findstr T030)",
+      "Bash(task_manager.bat list)",
+      "Bash(dir:*)",
+      "Bash(powershell \"Get-ChildItem ''AI_Employee_Vault/Pending_Approval'' -Name\")"
     ]
   }
 }

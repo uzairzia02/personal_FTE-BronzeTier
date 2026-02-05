@@ -192,6 +192,98 @@ The system adheres to the following principles:
 3. Review recent log files for any error messages
 4. Ensure the system processes files from `/Needs_Action`
 
+## Managing Project Tasks
+
+This project includes a task management system that allows you to easily mark tasks as done from the command line:
+
+### Using the Task Manager
+
+The system provides multiple interfaces for managing tasks:
+
+#### Python Interface
+```bash
+# List all tasks with their current status
+python task_manager.py --list
+
+# Mark a specific task as done
+python task_manager.py --mark-done T022
+
+# Approve a specific task
+python task_manager.py --approve T030
+```
+
+#### PowerShell Interface (Windows)
+```powershell
+# List all tasks
+.\task_manager.ps1 -List
+
+# Mark a specific task as done
+.\task_manager.ps1 -MarkDone T022
+
+# Approve a specific task
+.\task_manager.ps1 -Approve T030
+```
+
+#### Batch Interface (Windows)
+```cmd
+# List all tasks
+task_manager.bat list
+
+# Mark a specific task as done
+task_manager.bat done T022
+
+# Approve a specific task
+task_manager.bat approve T030
+```
+
+## Approving Pending Tasks
+
+When the AI Employee system identifies sensitive content, it moves the task to the `Pending_Approval` folder. You can approve or reject these tasks from the command line:
+
+### Using the Approval Manager
+
+#### Python Interface
+```bash
+# List all pending approval items
+python approval_manager.py --list
+
+# Approve a specific item
+python approval_manager.py --approve approval_20231201_123456_sometask.md
+
+# Reject a specific item
+python approval_manager.py --reject approval_20231201_123456_sometask.md
+```
+
+#### Batch Interface (Windows)
+```cmd
+# List all pending approval items
+approval_manager.bat list
+
+# Approve a specific item
+approval_manager.bat approve approval_20231201_123456_sometask.md
+
+# Reject a specific item
+approval_manager.bat reject approval_20231201_123456_sometask.md
+```
+
+#### PowerShell Interface (Windows)
+```powershell
+# List all pending approval items
+.\approval_manager.ps1 -List
+
+# Approve a specific item
+.\approval_manager.ps1 -Approve "approval_20231201_123456_sometask.md"
+
+# Reject a specific item
+.\approval_manager.ps1 -Reject "approval_20231201_123456_sometask.md"
+```
+
+The approval manager allows you to handle sensitive tasks that require human oversight directly from the command line, maintaining the human-in-the-loop principle of the system.
+
+### Task Status Legend
+- `[X]` - Completed/Approved task
+- `[ ]` - Pending task
+
 ## Extending the System
 
 The system is designed to be modular and extensible:

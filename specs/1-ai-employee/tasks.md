@@ -61,7 +61,7 @@ Implement the file system watcher that monitors a designated directory and conve
 - [X] T019 [P] [US1] Add file metadata extraction (name, size, timestamp) to YAML frontmatter
 - [X] T020 [P] [US1] Implement error handling for file access issues
 - [X] T021 [P] [US1] Add command-line interface for watcher configuration
-- [ ] T022 [US1] Test file watcher functionality with various file types
+- [X] T022 [US1] Test file watcher functionality with various file types
 
 ## Phase 4: [US2] Reasoning Engine - Basic Processing
 
@@ -82,7 +82,7 @@ Implement the reasoning engine that processes items in /Needs_Action, determines
 - [X] T027 [P] [US2] Create function to update Dashboard.md with recent activity
 - [X] T028 [P] [US2] Add approval request creation for sensitive content
 - [X] T029 [P] [US2] Implement error handling for processing failures
-- [ ] T030 [US2] Test basic reasoning engine with sample files containing various content types
+- [X] T030 [US2] Test basic reasoning engine with sample files containing various content types
 
 ## Phase 5: [US3] Complex Task Planning
 
