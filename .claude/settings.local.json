@@ -34,7 +34,8 @@
       "Bash(findstr T030)",
       "Bash(task_manager.bat list)",
       "Bash(dir:*)",
-      "Bash(powershell \"Get-ChildItem ''AI_Employee_Vault/Pending_Approval'' -Name\")"
+      "Bash(powershell \"Get-ChildItem ''AI_Employee_Vault/Pending_Approval'' -Name\")",
+      "Bash(powershell \"Get-ChildItem -Path . -Recurse -File | Select-Object FullName\")"
     ]
   }
 }
