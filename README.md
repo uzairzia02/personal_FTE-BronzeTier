@@ -192,15 +192,36 @@ The system adheres to the following principles:
 3. Review recent log files for any error messages
 4. Ensure the system processes files from `/Needs_Action`
 
-## Managing Project Tasks
+## Agent Skills Architecture
 
-This project includes a task management system that allows you to easily mark tasks as done from the command line:
+The AI functionality has been implemented as modular agent skills for enhanced flexibility and maintainability:
 
-### Using the Task Manager
+### Available Agent Skills
+- **File Watcher** (`/file-watcher`): Monitors directories for new files
+- **Reasoning Engine** (`/reasoning-engine`): Processes and routes tasks based on content
+- **Approval Manager** (`/approval-manager`): Handles human approval workflows
+- **AI Employee** (`/ai-employee`): Main orchestrator for the system
+- **Task Manager** (`/task-manager`): Manages and tracks tasks
+- **FTE CLI** (`/fte-cli`): Unified command-line interface
+
+Each skill can be invoked independently or combined in workflows for maximum flexibility.
+
+### Using the Agent Skills
 
 The system provides multiple interfaces for managing tasks:
 
-#### Python Interface
+#### Agent Skill Interface
+```bash
+# Using the agent skills interface
+/file-watcher --vault-path "./AI_Employee_Vault" --watch-dir "./watch_folder" --scan-once
+/reasoning-engine --vault-path "./AI_Employee_Vault" --scan-once
+/approval-manager --vault-path "./AI_Employee_Vault" --list
+/ai-employee --vault-path "./AI_Employee_Vault" --watch-dir "./watch_folder" --single-cycle
+/task-manager --vault-path "./AI_Employee_Vault" --list
+/fte-cli --vault-path "./AI_Employee_Vault" --mode watch
+```
+
+#### Python Interface (Traditional)
 ```bash
 # List all tasks with their current status
 python task_manager.py --list
